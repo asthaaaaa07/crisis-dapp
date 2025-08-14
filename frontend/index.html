@@ -1,0 +1,61 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Donation Vault - Demo Frontend</title>
+</head>
+<body>
+  <h2>Donation Vault - Minimal Frontend</h2>
+  <div>
+    <button id="connect">Connect MetaMask</button>
+    <div id="addr"></div>
+  </div>
+  <div>
+    <h3>Donate</h3>
+    <input id="donationAmount" placeholder="Amount in ETH" value="0.01"/>
+    <input id="proofText" placeholder="Short proof text"/>
+    <button id="donateBtn">Donate</button>
+  </div>
+  <div>
+    <h3>Submit Proof (after pinning)</h3>
+    <input id="ipfsCid" placeholder="ipfs cid"/>
+    <input id="proofHash" placeholder="proof hash (32 bytes)"/>
+    <button id="submitProof">Submit Proof</button>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.6.0/dist/ethers.umd.min.js"></script>
+  <script>
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    let signer, contract;
+    const CONTRACT_ADDRESS = "REPLACE_WITH_DEPLOYED_ADDRESS";
+    const ABI = [{"inputs":[{"internalType":"bytes32","name":"proofHash","type":"bytes32"}],"name":"donate","outputs":[],"stateMutability":"payable","type":"function"},{"inputs":[{"internalType":"bytes32","name":"proofHash","type":"bytes32"},{"internalType":"string","name":"ipfsCid","type":"string"}],"name":"submitProof","outputs":[],"stateMutability":"nonpayable","type":"function"}];
+
+    document.getElementById('connect').onclick = async () => {
+      await provider.send("eth_requestAccounts", []);
+      signer = await provider.getSigner();
+      const addr = await signer.getAddress();
+      document.getElementById('addr').innerText = addr;
+      contract = new ethers.Contract(CONTRACT_ADDRESS, ABI, signer);
+      alert('Connected. Make sure to replace CONTRACT_ADDRESS in the file with deployed address.');
+    };
+
+    document.getElementById('donateBtn').onclick = async () => {
+      const amt = document.getElementById('donationAmount').value;
+      const proof = document.getElementById('proofText').value || "demo";
+      const proofHash = ethers.keccak256(ethers.toUtf8Bytes(proof));
+      const tx = await contract.donate(proofHash, { value: ethers.parseEther(amt.toString()) });
+      await tx.wait();
+      alert('Donation tx sent');
+    };
+
+    document.getElementById('submitProof').onclick = async () => {
+      const cid = document.getElementById('ipfsCid').value;
+      const proofHashInput = document.getElementById('proofHash').value;
+      let pf = proofHashInput;
+      if (!pf) pf = ethers.keccak256(ethers.toUtf8Bytes('demo'));
+      const tx = await contract.submitProof(pf, cid);
+      await tx.wait();
+      alert('Proof submitted');
+    };
+  </script>
+</body>
+</html>
