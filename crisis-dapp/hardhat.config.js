@@ -11,11 +11,13 @@ module.exports = {
       }
     }
   },
-  networks: {
-    localhost: {
-      url: "http://127.0.0.1:8545",
-      chainId: 31337
-    },
+ networks: {
+  mumbai: {
+    url: "https://rpc-mumbai.maticvigil.com",
+
+    accounts: c4655216ea4cb70cb6509ff585ce63a16e2875635378ffec240aadc07383417a
+  }
+},
     mumbai: {
       url: process.env.RPC_URL || "",
       accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
