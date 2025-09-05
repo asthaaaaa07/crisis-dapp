@@ -55,7 +55,7 @@ Setup Instructions
 Clone the repository
 
 bash
-git clone https://github.com/your-username/crisisresponse.git
+git clone https://github.com/asthaaaaa07/crisis-dapp.git
 cd crisisresponse
 Install dependencies
 
