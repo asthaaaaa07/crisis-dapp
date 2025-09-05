@@ -122,7 +122,7 @@ For production, update addresses after deploying to your chosen Ethereum network
 📸 Screenshots & Demo
 🗺️ Crisis Mapping
 Real-time interactive map showing crisis reports.
-![Crisis Map](crisis-dapp/frontend-temp/src/assets/crisismap.jpg)
+![CrisiMap](frontend-temp/src/assets/crisismap.jpg)
 
 📝 Submit Report
 Submit detailed crisis reports with optional evidence uploads.
